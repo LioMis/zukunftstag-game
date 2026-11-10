@@ -33,16 +33,16 @@ type Popup struct {
 }
 
 type Game struct {
-	A      *Assets
-	Rng    *rand.Rand
-	State  State
-	City   *City
-	Car    Car
-	Cam    rl.Camera3D
-	Time   float32 // seconds left
-	Clock  float32 // seconds since start of state
-	Money  int
-	Done   int // deliveries
+	A     *Assets
+	Rng   *rand.Rand
+	State State
+	City  *City
+	Car   Car
+	Cam   rl.Camera3D
+	Time  float32 // seconds left
+	Clock float32 // seconds since start of state
+	Money int
+	Done  int // deliveries
 
 	HasParcel bool
 	Pickup    int // index into City.Buildings
