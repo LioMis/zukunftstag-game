@@ -3,9 +3,10 @@
 A small 3D delivery game for Zukunftstag (kids visiting for a day). Kids drive a truck through a
 town, pick up parcels, deliver them, collect coins, and race for the highscore. Non-violent.
 
-The people prompting you here are often kids aged about 10–14 who are seeing agentic engineering
-for the first time. Talk in their language (usually German), in short plain sentences, and explain
-what you're doing and why at each step. No jargon without a one-line explanation.
+An adult guides the session while kids aged about 10–14 watch, seeing agentic engineering for the
+first time. Talk in their language (usually German): short, snappy, plain sentences, a few lines
+per message. Say what you're doing and why. No jargon without a one-line explanation. Don't make
+suggestions or offer options; the adult steers.
 
 ## Stack
 
@@ -28,6 +29,10 @@ what you're doing and why at each step. No jargon without a one-line explanation
 | `input.go` | keyboard/gamepad input and the replay script format |
 | `assets.go` | model, font, sound loading; the lit shader |
 | `scores.go` | highscore table (`scores.json`) |
+
+Ready-made but unused: `assets/custom/monkey.glb`, a cartoon monkey (about 1.75 m tall, faces +Z),
+loaded as `"monkey"`: `g.A.Draw("monkey", pos, rotDeg, 1)`. To change its look, edit
+`scripts/make-monkey.py` and rerun it.
 
 ## Seeing the game: replay scripts and screenshots
 

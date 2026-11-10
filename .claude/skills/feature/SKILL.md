@@ -1,19 +1,22 @@
 ---
 name: feature
-description: Plan, build and check a new game feature together with a kid, step by step - plan, OK, implement, screenshot-test, fix, show. Use whenever someone asks for a new feature or change in Paket-Blitz ("mach dass...", "ich will ...", "/feature ...").
+description: Plan, build and check a new game feature step by step, for an adult guiding kids - plan, OK, implement, screenshot-test, fix, show. Use whenever someone asks for a new feature or change in Paket-Blitz ("mach dass...", "ich will ...", "/feature ...").
 ---
 
 # Feature: plan → build → test with screenshots
 
-The person is probably a kid seeing agentic engineering for the first time. The point is that they
-see the loop an engineer runs with an agent: **understand → plan → build → check → fix → show**.
-Say out loud which step you're in ("Schritt 2: Plan"). Keep each message short, in their language.
+An adult guides the session; kids watch and call out ideas. The point is that they see the loop an
+engineer runs with an agent: **understand → plan → build → check → fix → show**.
+Say which step you're in ("Schritt 2: Plan"). Every message is short and snappy, in their language:
+a few lines, no lists of options.
+
+**No suggestions.** Don't offer ideas, alternatives, examples or "what next?" options, and don't
+propose answers to your own questions. The adult steers; you do what's asked and report.
 
 ## 1. Understand
 
 Repeat the idea back in one sentence. If something decides how it plays (how big, how fast, what
-happens when…), ask at most two questions, each with a suggested answer they can just accept.
-Don't ask about things you can pick sensibly yourself.
+happens when…), ask at most two short open questions. Pick everything else sensibly yourself.
 
 ## 2. Plan
 
@@ -55,5 +58,5 @@ run `go test .`. No tests for things that already worked.
 
 ## 6. Show
 
-Show the final screenshots and tell them to try it: `./run.sh`. Ask what they'd
-change next. Then, if they're happy, commit with a short message saying what the feature does.
+Show the final screenshots and tell them to try it: `./run.sh`. Then, if they're happy, commit
+with a short message saying what the feature does.

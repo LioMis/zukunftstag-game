@@ -50,14 +50,14 @@ void main() {
 }`
 
 type Assets struct {
-	Dir      string
-	Models   map[string]rl.Model
-	Shader   rl.Shader
-	locView  int32
-	Font     rl.Font
-	Sounds   map[string]rl.Sound
-	Engine   rl.Music
-	Audio    bool
+	Dir     string
+	Models  map[string]rl.Model
+	Shader  rl.Shader
+	locView int32
+	Font    rl.Font
+	Sounds  map[string]rl.Sound
+	Engine  rl.Music
+	Audio   bool
 }
 
 var fogColor = rl.NewColor(178, 222, 245, 255)
@@ -80,6 +80,7 @@ func LoadAssets(dir string, audio bool) *Assets {
 			"road-corner", "road-intersection", "road-split", "road-straight-lightposts", "road-straight"},
 		"racing":     {"vehicle-truck-red", "vehicle-truck-yellow", "vehicle-truck-green", "vehicle-truck-purple"},
 		"platformer": {"coin", "flag", "cloud"},
+		"custom":     {"monkey"},
 	}
 	for kit, names := range models {
 		for _, n := range names {
