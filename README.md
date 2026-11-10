@@ -6,21 +6,21 @@ them (green), collect coins. Each delivery adds time. Highest Franken wins.
 ## Run (NixOS)
 
 ```bash
-nix-shell --run 'go run .'
+./fhs.sh go run .
 ```
 
-Or open the shell and work in it:
+Or open a shell inside the environment and work there:
 
 ```bash
-nix-shell
+./fhs.sh
 ```
 
 ```bash
 go run .
 ```
 
-`shell.nix` enters a bubblewrap FHS environment (`fhs.nix`) and needs no flakes. With flakes
-enabled, `nix develop` and `nix run` do the same.
+`fhs.sh` builds `fhs.nix`, a bubblewrap FHS environment (`buildFHSEnv`), with `nix-build` and runs
+the command inside it. No flakes needed.
 
 Controls: arrow keys or WASD, Enter/Space to confirm, Esc to quit. Gamepads work too.
 Flags: `-fullscreen`, `-w`/`-h`, `-scores <file>`.

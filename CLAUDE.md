@@ -10,9 +10,9 @@ what you're doing and why at each step. No jargon without a one-line explanation
 ## Stack
 
 - Go + raylib-go (cgo, OpenGL 3.3). Always build with `-tags x11` (no Wayland headers needed).
-- Only target: NixOS, through the bubblewrap FHS shell in `fhs.nix`: `nix-shell`, then `go run .`
-  (or `nix-shell --run 'go run .'`). Flakes are disabled on the target machine; `flake.nix` is an
-  optional extra. The shell sets `GOFLAGS=-tags=x11`.
+- Only target: NixOS, inside the bubblewrap FHS environment in `fhs.nix`. Enter it with `./fhs.sh`
+  (shell) or run one command with `./fhs.sh go run .`. Don't use `nix-shell`, `nix develop` or
+  flakes: flakes are disabled on the target machine. The environment sets `GOFLAGS=-tags=x11`.
 
 ## Code map
 

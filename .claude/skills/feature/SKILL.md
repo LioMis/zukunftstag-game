@@ -55,5 +55,5 @@ run `go test -tags x11 .`. No tests for things that already worked.
 
 ## 6. Show
 
-Show the final screenshots and tell them to try it: `go run .` (in `nix-shell`). Ask what they'd
+Show the final screenshots and tell them to try it: `./fhs.sh go run .`. Ask what they'd
 change next. Then, if they're happy, commit with a short message saying what the feature does.
