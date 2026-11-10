@@ -25,11 +25,14 @@ suggestions or offer options; the adult steers.
 | `game.go` | game states (title, play, game over, scores), jobs, coins, camera |
 | `draw.go` | all rendering: 3D scene, markers, HUD, menus |
 | `city.go` | town grid generation, road tile rotation, collision |
-| `car.go` | truck driving physics, banana spin |
-| `monkey.go` | monkey model (built from balls), walking, coin stealing, bananas |
+| `car.go` | truck driving physics |
 | `input.go` | keyboard/gamepad input and the replay script format |
-| `assets.go` | model, font, sound loading; the lit shader; `Ball` for models built from spheres |
+| `assets.go` | model, font, sound loading; the lit shader |
 | `scores.go` | highscore table (`scores.json`) |
+
+Ready-made but unused: `assets/custom/monkey.glb`, a cartoon monkey (about 1.75 m tall, faces +Z),
+loaded as `"monkey"`: `g.A.Draw("monkey", pos, rotDeg, 1)`. To change its look, edit
+`scripts/make-monkey.py` and rerun it.
 
 ## Seeing the game: replay scripts and screenshots
 

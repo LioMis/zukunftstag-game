@@ -1,7 +1,0 @@
-# Preview of the monkey in front of the truck at the start.
-5 enter
-40 shot 20-affe-start
-41 hold up
-75 release up
-130 shot 21-affe-nah
-131 quit

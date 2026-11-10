@@ -33,4 +33,5 @@ writes PNGs to `shots/`. See `CLAUDE.md` for the script format.
 
 - 3D models and sounds: [Kenney](https://kenney.nl), CC0, from the City Builder, Racing and 3D
   Platformer starter kits on github.com/KenneyNL.
+- `assets/custom/monkey.glb`: made for this game by `scripts/make-monkey.py`, CC0.
 - Font: Lilita One by Juan Montoreano, SIL Open Font License (`assets/fonts/license.txt`).

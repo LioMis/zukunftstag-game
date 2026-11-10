@@ -33,12 +33,6 @@ func (g *Game) Draw() {
 		}
 		g.drawMarker(b[g.Dropoff].Front, colDropoff)
 		g.Car.Draw(g.A)
-		for i := range g.Bananas {
-			g.Bananas[i].Draw(g.A, g.Clock)
-		}
-		for i := range g.Monkeys {
-			g.Monkeys[i].Draw(g.A)
-		}
 		if g.HasParcel {
 			p := rl.Vector3Add(g.Car.Pos, rl.NewVector3(0, 1.9, 0))
 			rl.DrawCube(p, 0.8, 0.6, 0.8, rl.NewColor(196, 140, 80, 255))
@@ -160,7 +154,6 @@ func (g *Game) drawTitle() {
 	g.textCentered("PAKET-BLITZ", sw/2, sh*0.18+bob, 140, rl.NewColor(255, 210, 60, 255))
 	g.textCentered("Hol Pakete ab, liefere sie aus, sammle Münzen!", sw/2, sh*0.18+150, 44, rl.White)
 	g.textCentered("Pfeiltasten / WASD: fahren", sw/2, sh*0.55, 40, rl.White)
-	g.textCentered("Achtung: Affen klauen Münzen und werfen Bananen!", sw/2, sh*0.55+50, 36, rl.NewColor(255, 200, 120, 255))
 	if int(g.Clock*2)%2 == 0 {
 		g.textCentered("ENTER drücken zum Starten", sw/2, sh*0.72, 52, rl.NewColor(120, 255, 140, 255))
 	}
