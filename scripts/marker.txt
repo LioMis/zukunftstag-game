@@ -1,0 +1,4 @@
+5 enter
+10 warp pickup
+12 shot 20-at-pickup
+13 quit
