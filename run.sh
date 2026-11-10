@@ -5,7 +5,7 @@
 # itself if yours is too old), rebuilds the game when the code has changed,
 # and starts it. Any arguments are passed to the game, e.g. ./run.sh -studio shots
 # On NixOS it uses the project's Nix shell (shell.nix) and installs nothing;
-# inside nix-shell, nix develop or the FHS env (fhs.nix) it just builds.
+# inside this project's Nix shell or FHS env (fhs.nix) it just builds.
 set -euo pipefail
 
 cd "$(dirname "$0")"
@@ -30,10 +30,11 @@ need_libs() {
 	return 1
 }
 
-if [ -n "${IN_NIX_SHELL:-}" ]; then
-	: # the Nix shell provides the libraries and Go
-elif need_libs && [ -e /etc/NIXOS ] && [ -z "${PAKET_BLITZ_FHS:-}" ]; then
-	# NixOS outside any shell: re-run inside the project's Nix shell
+if [ -n "${PAKET_BLITZ_SHELL:-}" ] || [ -n "${PAKET_BLITZ_FHS:-}" ]; then
+	: # our Nix shell or FHS env provides the libraries and Go
+elif [ -e /etc/NIXOS ]; then
+	# NixOS: always use the project's shell. Another project's nix-shell or FHS env
+	# (IN_NIX_SHELL, a partial /usr/include) may lack headers such as X11/X.h.
 	say "NixOS: entering the Nix shell (shell.nix)"
 	exec nix-shell --run "$(printf '%q ' ./run.sh "$@")"
 elif need_libs; then

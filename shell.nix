@@ -27,6 +27,7 @@ pkgs.mkShell {
   # (/run/opengl-driver); elsewhere Mesa is the fallback (Intel and AMD GPUs,
   # or software rendering).
   shellHook = ''
+    export PAKET_BLITZ_SHELL=1
     export LD_LIBRARY_PATH="${pkgs.lib.makeLibraryPath libs}''${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     if [ -d /run/opengl-driver/lib ]; then
       export LD_LIBRARY_PATH="/run/opengl-driver/lib:$LD_LIBRARY_PATH"
