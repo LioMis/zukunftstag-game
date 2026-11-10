@@ -50,14 +50,14 @@ void main() {
 }`
 
 type Assets struct {
-	Dir      string
-	Models   map[string]rl.Model
-	Shader   rl.Shader
-	locView  int32
-	Font     rl.Font
-	Sounds   map[string]rl.Sound
-	Engine   rl.Music
-	Audio    bool
+	Dir     string
+	Models  map[string]rl.Model
+	Shader  rl.Shader
+	locView int32
+	Font    rl.Font
+	Sounds  map[string]rl.Sound
+	Engine  rl.Music
+	Audio   bool
 }
 
 var fogColor = rl.NewColor(178, 222, 245, 255)
@@ -93,6 +93,10 @@ func LoadAssets(dir string, audio bool) *Assets {
 			a.Models[n] = m
 		}
 	}
+	ball := rl.LoadModelFromMesh(rl.GenMeshSphere(1, 12, 16))
+	ball.GetMaterials()[0].Shader = a.Shader
+	a.Models["ball"] = ball
+
 	a.Font = rl.LoadFontEx(filepath.Join(dir, "fonts", "lilita_one_regular.ttf"), 96, FontRunes())
 	rl.SetTextureFilter(a.Font.Texture, rl.FilterBilinear)
 
@@ -122,6 +126,14 @@ func (a *Assets) Play(name string) {
 // Draw draws a model at pos rotated by rotDeg around Y, uniformly scaled.
 func (a *Assets) Draw(name string, pos rl.Vector3, rotDeg, scale float32) {
 	rl.DrawModelEx(a.Models[name], pos, rl.NewVector3(0, 1, 0), rotDeg, rl.NewVector3(scale, scale, scale), rl.White)
+}
+
+// Ball draws a unit sphere squashed to size, moved by off, then placed by the matrix place.
+func (a *Assets) Ball(off, size rl.Vector3, col rl.Color, place rl.Matrix) {
+	m := a.Models["ball"]
+	m.Transform = rl.MatrixMultiply(rl.MatrixMultiply(rl.MatrixScale(size.X, size.Y, size.Z),
+		rl.MatrixTranslate(off.X, off.Y, off.Z)), place)
+	rl.DrawModel(m, rl.Vector3{}, 1, col)
 }
 
 // FontRunes is the glyph set loaded from the font: printable ASCII plus the

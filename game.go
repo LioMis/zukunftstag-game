@@ -48,6 +48,7 @@ type Game struct {
 	Pickup    int // index into City.Buildings
 	Dropoff   int
 	Coins     []rl.Vector3
+	Monkeys   []Monkey
 	Popups    []Popup
 
 	Scores     []Score
@@ -79,6 +80,8 @@ func (g *Game) reset() {
 	for len(g.Coins) < numCoins {
 		g.Coins = append(g.Coins, g.randomRoadSpot())
 	}
+	// One monkey two tiles in front of the truck, looking at it.
+	g.Monkeys = []Monkey{{Pos: rl.NewVector3(start.X, 0, start.Z+2*TileSize), Heading: math.Pi}}
 	g.Cam = rl.Camera3D{Position: rl.NewVector3(start.X, 8, start.Z-10), Target: start,
 		Up: rl.NewVector3(0, 1, 0), Fovy: 55, Projection: rl.CameraPerspective}
 }

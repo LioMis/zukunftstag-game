@@ -33,6 +33,9 @@ func (g *Game) Draw() {
 		}
 		g.drawMarker(b[g.Dropoff].Front, colDropoff)
 		g.Car.Draw(g.A)
+		for i := range g.Monkeys {
+			g.Monkeys[i].Draw(g.A)
+		}
 		if g.HasParcel {
 			p := rl.Vector3Add(g.Car.Pos, rl.NewVector3(0, 1.9, 0))
 			rl.DrawCube(p, 0.8, 0.6, 0.8, rl.NewColor(196, 140, 80, 255))
