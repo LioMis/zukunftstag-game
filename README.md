@@ -6,21 +6,16 @@ them (green), collect coins. Each delivery adds time. Highest Franken wins.
 ## Run (NixOS)
 
 ```bash
-./fhs.sh go run .
+./run.sh
 ```
 
-Or open a shell inside the environment and work there:
+On NixOS it enters the bubblewrap FHS environment from `fhs.nix` by itself (built with
+`nix-build`, no flakes needed), builds when the code changed, and starts the game. For a shell
+inside that environment:
 
 ```bash
 ./fhs.sh
 ```
-
-```bash
-go run .
-```
-
-`fhs.sh` builds `fhs.nix`, a bubblewrap FHS environment (`buildFHSEnv`), with `nix-build` and runs
-the command inside it. No flakes needed.
 
 Controls: arrow keys or WASD, Enter/Space to confirm, Esc to quit. Gamepads work too.
 Flags: `-fullscreen`, `-w`/`-h`, `-scores <file>`.

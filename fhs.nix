@@ -1,14 +1,16 @@
-# Bubblewrap FHS environment for building and running Paket-Blitz.
-# raylib's cgo build and miniaudio's dlopen of ALSA/PulseAudio find everything
-# under /usr/lib like on any other distro. GL drivers come from the host's
-# /run/opengl-driver.
+# A bubblewrap FHS environment with everything the game needs in the usual
+# places (/usr/include, /usr/lib), so ./run.sh and go run . work unchanged.
 #
-# Build and enter it with ./fhs.sh (no flakes needed):
-#   ./fhs.sh            interactive shell inside the FHS env
-#   ./fhs.sh go run .   run one command inside it
+#   ./run.sh                                  (enters this env by itself on NixOS)
+#   ./fhs.sh go run .                         (run one command in it)
+#   ./fhs.sh                                  (an interactive shell in it)
+#   nix-shell -A env fhs.nix                  (same, via nix-shell)
+#
+# The host's OpenGL driver (/run/opengl-driver on NixOS) is used as is.
 { pkgs ? import <nixpkgs> { } }:
+
 pkgs.buildFHSEnv {
-  name = "paket-blitz-env";
+  name = "paket-blitz-fhs";
   targetPkgs = p: with p; [
     go
     gcc
@@ -16,30 +18,33 @@ pkgs.buildFHSEnv {
     git
     libGL
     libglvnd
+    mesa
+    libx11
+    libxcursor
+    libxrandr
+    libxinerama
+    libxi
+    libxext
+    libxrender
+    libxfixes
     libxkbcommon
-    xorg.libX11
-    xorg.libXcursor
-    xorg.libXext
-    xorg.libXi
-    xorg.libXinerama
-    xorg.libXrandr
-    xorg.libXrender
-    xorg.libXxf86vm
+    # miniaudio (raylib's audio) dlopens these
     alsa-lib
     libpulseaudio
-    # Headless screenshots (scripts/shoot.sh falls back to these without a display).
+    # headless screenshots: scripts/shoot.sh uses xvfb-run when there is no display
     xvfb-run
-    mesa
-    ffmpeg
   ];
-  # Set the Go env here rather than in `profile`: /etc/profile is only read
-  # by login shells, and `./fhs.sh go run .` starts no shell at all.
-  runScript = pkgs.writeShellScript "paket-blitz-run" ''
+  # raylib's build needs the headers, which live in the -dev outputs
+  extraOutputsToInstall = [ "dev" ];
+  # with arguments, run them (e.g. ./run.sh); without, an interactive shell.
+  # The Go env is set here, not in `profile`, so it also applies without a login shell.
+  runScript = pkgs.writeShellScript "paket-blitz-fhs-run" ''
     export CGO_ENABLED=1
     export GOFLAGS=-tags=x11
-    if [ $# -eq 0 ]; then
-      exec bash
-    fi
+    if [ $# -eq 0 ]; then exec bash; fi
     exec "$@"
+  '';
+  profile = ''
+    export PAKET_BLITZ_FHS=1
   '';
 }
