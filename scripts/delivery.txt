@@ -1,0 +1,18 @@
+# One full delivery via warps, then let time run out and enter a name.
+5 enter
+10 warp pickup
+11 hold up
+60 shot 10-pickup-approach
+100 shot 11-picked-up
+101 release up
+110 warp dropoff
+111 hold up
+150 shot 12-dropoff-approach
+190 shot 13-delivered
+191 release up
+6000 shot 14-over
+6010 type Lea
+6020 shot 15-name
+6021 enter
+6060 shot 16-scores
+6061 quit

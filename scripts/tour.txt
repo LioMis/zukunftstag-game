@@ -1,0 +1,10 @@
+# Title, then drive a bit and shoot.
+30 shot 01-title
+31 enter
+40 shot 02-start
+40 hold up
+130 shot 03-driving
+130 hold left
+170 release left
+220 shot 04-after-turn
+221 quit
