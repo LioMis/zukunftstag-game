@@ -45,13 +45,20 @@ func monkeyParts(swing float32) []part {
 		{v(-0.2, 0.28, -swing*0.15), v(0.14, 0.3, 0.14), colFur}, // legs
 		{v(0.2, 0.28, swing*0.15), v(0.14, 0.3, 0.14), colFur},   //
 	}
-	// Tail: a row of small balls curling up behind.
-	for i := 0; i < 16; i++ {
-		t := float64(i) / 15
-		a := t * math.Pi * 1.3
-		ps = append(ps, part{v(0, 0.5+float32(0.6*(1-math.Cos(a))), -0.35-float32(0.45*math.Sin(a))),
-			v(0.075, 0.075, 0.075), colFur})
+	// Tail: many small overlapping balls, so it looks like one smooth tube. It leaves the bottom,
+	// sweeps back and up, and curls in at the tip like a question mark. Thick at the base, thin at the tip.
+	const n = 40
+	for i := 0; i < n; i++ {
+		t := float64(i) / (n - 1)
+		a := 1.03 - t*4.3         // angle around the curl centre: down, back, up, then forward
+		r := 0.58 * (1 - 0.6*t)   // spiral: the curl gets tighter towards the tip
+		y := 0.8 - r*math.Cos(a)  // curl centre 0.8 up ...
+		z := -0.9 + r*math.Sin(a) // ... and 0.9 behind the monkey
+		w := float32(0.085 - 0.04*t)
+		ps = append(ps, part{v(float32(0.1*t), float32(y), float32(z)), v(w, w, w), colFur})
 	}
+	// Lighter fur patch on the back of the head, so it isn't a plain brown ball from behind.
+	ps = append(ps, part{v(0, 1.48, -0.2), v(0.26, 0.24, 0.18), rl.NewColor(150, 95, 55, 255)})
 	return ps
 }
 
