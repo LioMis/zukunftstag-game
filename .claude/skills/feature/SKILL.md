@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Plan, build and check a new game feature together with a kid, step by step - plan, OK, implement, screenshot-test, fix, show. Use whenever someone asks for a new feature or change in Paket-Blitz ("mach dass...", "ich will ...", "/feature ...").
+description: Plan, build and check a new game feature step by step, for an adult guiding kids - plan, OK, implement, screenshot-test, fix, show. Use whenever someone asks for a new feature or change in Paket-Blitz ("mach dass...", "ich will ...", "/feature ...").
 ---
 
 # Feature: plan → build → test with screenshots
@@ -58,4 +58,5 @@ run `go test .`. No tests for things that already worked.
 
 ## 6. Show
 
-Show the final screenshots and tell them to try it: `./run.sh`. Then, if they're happy, commit with a short message saying what the feature does.
+Show the final screenshots and tell them to try it: `./run.sh`. Then, if they're happy, commit
+with a short message saying what the feature does.
