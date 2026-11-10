@@ -32,6 +32,7 @@ func (g *Game) Draw() {
 			g.drawMarker(b[g.Pickup].Front, colPickup)
 		}
 		g.drawMarker(b[g.Dropoff].Front, colDropoff)
+		g.drawMonkeys()
 		g.Car.Draw(g.A)
 		if g.HasParcel {
 			p := rl.Vector3Add(g.Car.Pos, rl.NewVector3(0, 1.9, 0))

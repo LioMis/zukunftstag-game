@@ -33,22 +33,25 @@ type Popup struct {
 }
 
 type Game struct {
-	A      *Assets
-	Rng    *rand.Rand
-	State  State
-	City   *City
-	Car    Car
-	Cam    rl.Camera3D
-	Time   float32 // seconds left
-	Clock  float32 // seconds since start of state
-	Money  int
-	Done   int // deliveries
+	A     *Assets
+	Rng   *rand.Rand
+	State State
+	City  *City
+	Car   Car
+	Cam   rl.Camera3D
+	Time  float32 // seconds left
+	Clock float32 // seconds since start of state
+	Money int
+	Done  int // deliveries
 
 	HasParcel bool
 	Pickup    int // index into City.Buildings
 	Dropoff   int
 	Coins     []rl.Vector3
 	Popups    []Popup
+	Monkeys   []Monkey
+	Bananas   []Banana
+	NextThrow float32 // seconds until a monkey throws the next banana
 
 	Scores     []Score
 	ScoresPath string
@@ -79,6 +82,7 @@ func (g *Game) reset() {
 	for len(g.Coins) < numCoins {
 		g.Coins = append(g.Coins, g.randomRoadSpot())
 	}
+	g.spawnMonkeys()
 	g.Cam = rl.Camera3D{Position: rl.NewVector3(start.X, 8, start.Z-10), Target: start,
 		Up: rl.NewVector3(0, 1, 0), Fovy: 55, Projection: rl.CameraPerspective}
 }
@@ -182,7 +186,8 @@ func (g *Game) updatePlay(in Input, dt float32) {
 		g.A.Play("rotate")
 		return
 	}
-	if in.Warp != "" {
+	switch in.Warp {
+	case "pickup", "dropoff":
 		b := g.City.Buildings[g.Pickup]
 		if in.Warp == "dropoff" {
 			b = g.City.Buildings[g.Dropoff]
@@ -191,16 +196,14 @@ func (g *Game) updatePlay(in Input, dt float32) {
 		dx := b.Front.X - CellCenter(b.Cell).X
 		dz := b.Front.Z - CellCenter(b.Cell).Z
 		side := rl.Vector3Normalize(rl.NewVector3(dz, 0, -dx))
-		g.Car.Pos = rl.Vector3Add(b.Front, rl.Vector3Scale(side, 7))
-		g.Car.Heading = float32(math.Atan2(float64(-side.X), float64(-side.Z)))
-		g.Car.Speed = 0
-		f := g.Car.Forward()
-		g.Cam.Position = rl.Vector3Add(g.Car.Pos, rl.NewVector3(-f.X*7, 13, -f.Z*7))
-		g.Cam.Target = g.Car.Pos
+		g.parkCar(rl.Vector3Add(b.Front, rl.Vector3Scale(side, 7)), rl.Vector3Negate(side))
+	case "banana":
+		g.warpToBanana()
 	}
 	if hit := g.Car.Update(in, g.City, dt); hit > 0 {
 		g.A.Play("impact")
 	}
+	g.updateMonkeys(dt)
 
 	if rl.Vector3Distance(g.Car.Pos, g.Target()) < triggerRadius {
 		if !g.HasParcel {
@@ -229,12 +232,22 @@ func (g *Game) updatePlay(in Input, dt float32) {
 		}
 	}
 
-	// Chase camera.
-	f := g.Car.Forward()
+	// Chase camera. While the truck spins on a banana it stays behind the slide, not the spin.
+	f := g.Car.Move()
 	want := rl.Vector3Add(g.Car.Pos, rl.NewVector3(-f.X*7, 13, -f.Z*7))
 	k := 1 - float32(math.Exp(float64(-4*dt)))
 	g.Cam.Position = rl.Vector3Lerp(g.Cam.Position, want, k)
 	g.Cam.Target = rl.Vector3Lerp(g.Cam.Target, rl.Vector3Add(g.Car.Pos, rl.NewVector3(f.X*5, 0, f.Z*5)), k*2)
+}
+
+// parkCar puts the truck at pos, standing still and facing dir, with the camera behind it.
+func (g *Game) parkCar(pos, dir rl.Vector3) {
+	g.Car.Pos = pos
+	g.Car.Heading = float32(math.Atan2(float64(dir.X), float64(dir.Z)))
+	g.Car.Speed, g.Car.Slip = 0, 0
+	f := g.Car.Forward()
+	g.Cam.Position = rl.Vector3Add(g.Car.Pos, rl.NewVector3(-f.X*7, 13, -f.Z*7))
+	g.Cam.Target = g.Car.Pos
 }
 
 // idleCamera slowly circles the town for menus.

@@ -1,0 +1,15 @@
+# Monkeys walk the roads and throw bananas; the truck slips on one.
+5 enter
+200 shot 20-affen
+# First banana is thrown 4 s after the start (frame ~245) and lands 0.9 s later.
+330 warp banana
+331 hold up
+350 shot 22-vor-der-banane
+365 shot 23-rutscht
+392 shot 24-rutscht-weiter
+440 shot 25-nach-dem-rutschen
+441 release up
+497 shot 26-banane-fliegt
+507 shot 27-banane-fliegt
+530 shot 28-banane-liegt
+531 quit

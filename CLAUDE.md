@@ -25,14 +25,14 @@ suggestions or offer options; the adult steers.
 | `game.go` | game states (title, play, game over, scores), jobs, coins, camera |
 | `draw.go` | all rendering: 3D scene, markers, HUD, menus |
 | `city.go` | town grid generation, road tile rotation, collision |
-| `car.go` | truck driving physics |
+| `car.go` | truck driving physics, banana spin |
+| `monkeys.go` | monkeys walking the roads, throwing bananas the truck slips on |
 | `input.go` | keyboard/gamepad input and the replay script format |
 | `assets.go` | model, font, sound loading; the lit shader |
 | `scores.go` | highscore table (`scores.json`) |
 
-Ready-made but unused: `assets/custom/monkey.glb`, a cartoon monkey (about 1.75 m tall, faces +Z),
-loaded as `"monkey"`: `g.A.Draw("monkey", pos, rotDeg, 1)`. To change its look, edit
-`scripts/make-monkey.py` and rerun it.
+`assets/custom/monkey.glb` is a cartoon monkey (about 1.75 m tall, faces +Z), loaded as `"monkey"`
+and drawn by `monkeys.go`. To change its look, edit `scripts/make-monkey.py` and rerun it.
 
 ## Seeing the game: replay scripts and screenshots
 
@@ -45,7 +45,8 @@ scripts/shoot.sh scripts/delivery.txt
 This builds the game, replays the script with a fixed seed and fixed 60 fps timestep, and writes
 PNGs to `shots/`. Read them with the Read tool and show them to the user. The script format is
 documented on `Script` in `input.go` (`hold`, `release`, `enter`, `type`, `warp`, `shot`, `quit`).
-`warp pickup|dropoff` teleports the truck next to the current target, so you don't have to steer.
+`warp pickup|dropoff` teleports the truck next to the current target, `warp banana` parks it before a
+banana on the road, so you don't have to steer.
 
 ## Rules
 

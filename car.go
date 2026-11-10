@@ -17,7 +17,27 @@ type Car struct {
 	Heading float32 // radians, 0 faces +Z
 	Speed   float32
 	Model   string
-	Bump    float32 // seconds since the last crash, for sound throttling
+	Bump    float32    // seconds since the last crash, for sound throttling
+	Slip    float32    // seconds of banana spin left
+	SlideTo rl.Vector3 // direction the truck slides in while spinning
+}
+
+// StartSlip makes the truck spin on a banana, sliding on in the direction it was going.
+func (c *Car) StartSlip() {
+	c.Slip = slipTime
+	c.SlideTo = c.Forward()
+	if c.Speed < 0 {
+		c.SlideTo = rl.Vector3Negate(c.SlideTo)
+	}
+	c.Speed = float32(math.Abs(float64(c.Speed)))
+}
+
+// Move returns the direction the truck moves in: forward, or its slide while spinning.
+func (c *Car) Move() rl.Vector3 {
+	if c.Slip > 0 {
+		return c.SlideTo
+	}
+	return c.Forward()
 }
 
 func (c *Car) Forward() rl.Vector3 {
@@ -26,6 +46,16 @@ func (c *Car) Forward() rl.Vector3 {
 
 // Update moves the car. Returns the impact speed if it hit something this frame.
 func (c *Car) Update(in Input, city *City, dt float32) float32 {
+	if c.Slip > 0 {
+		// Spinning on a banana: no steering, no gas, one full turn.
+		c.Slip -= dt
+		c.Heading += 2 * math.Pi / slipTime * dt
+		c.Speed -= c.Speed * 1.2 * dt
+		in = Input{}
+		if c.Slip <= 0 {
+			c.Speed = 0 // stopped after the spin; facing wherever it ended up
+		}
+	}
 	switch {
 	case in.Up:
 		if c.Speed < 0 {
@@ -58,13 +88,13 @@ func (c *Car) Update(in Input, city *City, dt float32) float32 {
 	}
 	c.Heading += steer * 2.4 * grip * sign * dt
 
-	c.Pos = rl.Vector3Add(c.Pos, rl.Vector3Scale(c.Forward(), c.Speed*dt))
+	c.Pos = rl.Vector3Add(c.Pos, rl.Vector3Scale(c.Move(), c.Speed*dt))
 	pos, n := city.Collide(c.Pos, carRadius)
 	c.Pos = pos
 	c.Bump += dt
 	if n.X != 0 || n.Z != 0 {
 		// Lose the part of the velocity going into the wall.
-		into := -rl.Vector3DotProduct(c.Forward(), n) * c.Speed
+		into := -rl.Vector3DotProduct(c.Move(), n) * c.Speed
 		if into > 0 {
 			c.Speed *= 0.6
 			if into > 6 && c.Bump > 0.4 {
