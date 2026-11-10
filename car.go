@@ -18,6 +18,14 @@ type Car struct {
 	Speed   float32
 	Model   string
 	Bump    float32 // seconds since the last crash, for sound throttling
+	Spin    float32 // seconds left spinning after a banana
+	SpinDir rl.Vector3
+}
+
+// StartSpin makes the truck slide on in its current direction while it turns once around.
+func (c *Car) StartSpin() {
+	c.Spin = spinTime
+	c.SpinDir = c.Forward()
 }
 
 func (c *Car) Forward() rl.Vector3 {
@@ -26,6 +34,15 @@ func (c *Car) Forward() rl.Vector3 {
 
 // Update moves the car. Returns the impact speed if it hit something this frame.
 func (c *Car) Update(in Input, city *City, dt float32) float32 {
+	if c.Spin > 0 {
+		// No steering or gas while spinning: slide on and slow down, turning once around.
+		c.Spin -= dt
+		c.Heading += 2 * math.Pi / spinTime * dt
+		c.Speed -= c.Speed * 2 * dt
+		c.Pos = rl.Vector3Add(c.Pos, rl.Vector3Scale(c.SpinDir, c.Speed*dt))
+		c.Pos, _ = city.Collide(c.Pos, carRadius)
+		return 0
+	}
 	switch {
 	case in.Up:
 		if c.Speed < 0 {

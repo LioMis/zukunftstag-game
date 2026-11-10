@@ -49,6 +49,7 @@ type Game struct {
 	Dropoff   int
 	Coins     []rl.Vector3
 	Monkeys   []Monkey
+	Bananas   []Banana
 	Popups    []Popup
 
 	Scores     []Score
@@ -80,8 +81,7 @@ func (g *Game) reset() {
 	for len(g.Coins) < numCoins {
 		g.Coins = append(g.Coins, g.randomRoadSpot())
 	}
-	// One monkey two tiles in front of the truck, looking at it.
-	g.Monkeys = []Monkey{{Pos: rl.NewVector3(start.X, 0, start.Z+2*TileSize), Heading: math.Pi}}
+	g.spawnMonkeys()
 	g.Cam = rl.Camera3D{Position: rl.NewVector3(start.X, 8, start.Z-10), Target: start,
 		Up: rl.NewVector3(0, 1, 0), Fovy: 55, Projection: rl.CameraPerspective}
 }
@@ -185,7 +185,9 @@ func (g *Game) updatePlay(in Input, dt float32) {
 		g.A.Play("rotate")
 		return
 	}
-	if in.Warp != "" {
+	if in.Warp == "affe" || in.Warp == "banane" {
+		g.warpBehind(in.Warp)
+	} else if in.Warp != "" {
 		b := g.City.Buildings[g.Pickup]
 		if in.Warp == "dropoff" {
 			b = g.City.Buildings[g.Dropoff]
@@ -223,6 +225,7 @@ func (g *Game) updatePlay(in Input, dt float32) {
 			g.newJob()
 		}
 	}
+	g.updateMonkeys(dt)
 	for i := range g.Coins {
 		if rl.Vector3Distance(g.Car.Pos, rl.NewVector3(g.Coins[i].X, 0, g.Coins[i].Z)) < 1.8 {
 			g.Money++
@@ -238,6 +241,31 @@ func (g *Game) updatePlay(in Input, dt float32) {
 	k := 1 - float32(math.Exp(float64(-4*dt)))
 	g.Cam.Position = rl.Vector3Lerp(g.Cam.Position, want, k)
 	g.Cam.Target = rl.Vector3Lerp(g.Cam.Target, rl.Vector3Add(g.Car.Pos, rl.NewVector3(f.X*5, 0, f.Z*5)), k*2)
+}
+
+// warpBehind (script only) parks the truck 7 m behind the first monkey or banana, on the road the
+// monkey came along, facing it,
+// so a script can drive straight into it.
+func (g *Game) warpBehind(what string) {
+	var pos rl.Vector3
+	var h float32
+	switch {
+	case what == "affe" && len(g.Monkeys) > 0:
+		m := &g.Monkeys[0]
+		m.Rest = 0
+		pos, h = m.Pos, m.Heading // behind it: the road it just walked along
+	case what == "banane" && len(g.Bananas) > 0:
+		pos, h = g.Bananas[0].Pos, g.Bananas[0].Heading
+	default:
+		fmt.Println("warp", what, ": nothing to warp to")
+		return
+	}
+	f := rl.NewVector3(float32(math.Sin(float64(h))), 0, float32(math.Cos(float64(h))))
+	g.Car.Pos = rl.Vector3Subtract(rl.NewVector3(pos.X, 0, pos.Z), rl.Vector3Scale(f, 7))
+	g.Car.Heading = h
+	g.Car.Speed = 0
+	g.Cam.Position = rl.Vector3Add(g.Car.Pos, rl.NewVector3(-f.X*7, 13, -f.Z*7))
+	g.Cam.Target = g.Car.Pos
 }
 
 // idleCamera slowly circles the town for menus.

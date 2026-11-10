@@ -101,7 +101,7 @@ func LoadAssets(dir string, audio bool) *Assets {
 	rl.SetTextureFilter(a.Font.Texture, rl.FilterBilinear)
 
 	if audio {
-		for _, n := range []string{"coin", "impact", "placement-a", "toggle", "rotate", "skid"} {
+		for _, n := range []string{"coin", "impact", "placement-a", "toggle", "rotate", "skid", "jump", "land"} {
 			a.Sounds[n] = rl.LoadSound(filepath.Join(dir, "sounds", n+".ogg"))
 		}
 		a.Engine = rl.LoadMusicStream(filepath.Join(dir, "sounds", "engine.ogg"))

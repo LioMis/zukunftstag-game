@@ -3,9 +3,10 @@
 A small 3D delivery game for Zukunftstag (kids visiting for a day). Kids drive a truck through a
 town, pick up parcels, deliver them, collect coins, and race for the highscore. Non-violent.
 
-The people prompting you here are often kids aged about 10–14 who are seeing agentic engineering
-for the first time. Talk in their language (usually German), in short plain sentences, and explain
-what you're doing and why at each step. No jargon without a one-line explanation.
+An adult guides the session while kids aged about 10–14 watch, seeing agentic engineering for the
+first time. Talk in their language (usually German): short, snappy, plain sentences, a few lines
+per message. Say what you're doing and why. No jargon without a one-line explanation. Don't make
+suggestions or offer options; the adult steers.
 
 ## Stack
 
@@ -24,9 +25,10 @@ what you're doing and why at each step. No jargon without a one-line explanation
 | `game.go` | game states (title, play, game over, scores), jobs, coins, camera |
 | `draw.go` | all rendering: 3D scene, markers, HUD, menus |
 | `city.go` | town grid generation, road tile rotation, collision |
-| `car.go` | truck driving physics |
+| `car.go` | truck driving physics, banana spin |
+| `monkey.go` | monkey model (built from balls), walking, coin stealing, bananas |
 | `input.go` | keyboard/gamepad input and the replay script format |
-| `assets.go` | model, font, sound loading; the lit shader |
+| `assets.go` | model, font, sound loading; the lit shader; `Ball` for models built from spheres |
 | `scores.go` | highscore table (`scores.json`) |
 
 ## Seeing the game: replay scripts and screenshots

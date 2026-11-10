@@ -15,7 +15,7 @@ type Input struct {
 	Up, Down, Left, Right bool
 	Enter, Back           bool // edge-triggered
 	Chars                 []rune
-	Warp                  string // script only: teleport the car next to "pickup" or "dropoff"
+	Warp                  string // script only: teleport the car, see Script
 }
 
 func KeyboardInput() Input {
@@ -49,6 +49,7 @@ func KeyboardInput() Input {
 //	<frame> type TEXT
 //	<frame> shot NAME          (writes NAME.png into the shot directory)
 //	<frame> warp pickup|dropoff  (teleport the car next to the current target)
+//	<frame> warp affe|banane     (park the car 7 m behind the first monkey or banana, facing it)
 //	<frame> quit
 type Script struct {
 	events map[int][][]string
