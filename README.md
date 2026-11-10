@@ -9,12 +9,13 @@ them (green), collect coins. Each delivery adds time. Highest Franken wins.
 ./run.sh
 ```
 
-On NixOS it enters the bubblewrap FHS environment from `fhs.nix` by itself (built with
-`nix-build`, no flakes needed), builds when the code changed, and starts the game. For a shell
-inside that environment:
+On NixOS it enters the project's Nix shell (`shell.nix`) by itself, builds when the code changed,
+and starts the game. Arguments go to the game, e.g. `./run.sh -fullscreen`.
+
+In the bubblewrap FHS env instead:
 
 ```bash
-./fhs.sh
+$(nix-build fhs.nix --no-out-link)/bin/paket-blitz-fhs ./run.sh
 ```
 
 Controls: arrow keys or WASD, Enter/Space to confirm, Esc to quit. Gamepads work too.

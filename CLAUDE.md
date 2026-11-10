@@ -9,11 +9,12 @@ what you're doing and why at each step. No jargon without a one-line explanation
 
 ## Stack
 
-- Go + raylib-go (cgo, OpenGL 3.3). Always build with `-tags x11` (no Wayland headers needed).
-- Only target: NixOS, inside the bubblewrap FHS environment in `fhs.nix`. `./run.sh` enters it
-  by itself, builds and starts the game; `./fhs.sh` opens a shell in it, `./fhs.sh <cmd>` runs one
-  command in it. Don't use `nix-shell`, `nix develop` or
-  flakes: flakes are disabled on the target machine. The environment sets `GOFLAGS=-tags=x11`.
+- Go + raylib-go (cgo, OpenGL 3.3).
+- Only target: NixOS. `./run.sh` builds and starts the game; on NixOS it enters the Nix shell
+  (`shell.nix`) by itself. `fhs.nix` is a bubblewrap FHS env alternative:
+  `$(nix-build fhs.nix --no-out-link)/bin/paket-blitz-fhs ./run.sh`. The setup is copied from
+  github.com/lmis/wheel-loader, which works on the target machine; keep it in line with that
+  rather than inventing a different one. Flakes are disabled on the target machine.
 
 ## Code map
 

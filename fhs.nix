@@ -1,10 +1,9 @@
 # A bubblewrap FHS environment with everything the game needs in the usual
 # places (/usr/include, /usr/lib), so ./run.sh and go run . work unchanged.
 #
-#   ./run.sh                                  (enters this env by itself on NixOS)
-#   ./fhs.sh go run .                         (run one command in it)
-#   ./fhs.sh                                  (an interactive shell in it)
-#   nix-shell -A env fhs.nix                  (same, via nix-shell)
+#   $(nix-build fhs.nix --no-out-link)/bin/paket-blitz-fhs ./run.sh
+#   nix run .#fhs -- ./run.sh                 (with flakes)
+#   nix-shell -A env fhs.nix                  (an interactive shell in it)
 #
 # The host's OpenGL driver (/run/opengl-driver on NixOS) is used as is.
 { pkgs ? import <nixpkgs> { } }:
@@ -15,7 +14,6 @@ pkgs.buildFHSEnv {
     go
     gcc
     pkg-config
-    git
     libGL
     libglvnd
     mesa
@@ -27,20 +25,15 @@ pkgs.buildFHSEnv {
     libxext
     libxrender
     libxfixes
+    wayland
+    wayland-scanner
+    wayland-protocols
     libxkbcommon
-    # miniaudio (raylib's audio) dlopens these
-    alsa-lib
-    libpulseaudio
-    # headless screenshots: scripts/shoot.sh uses xvfb-run when there is no display
-    xvfb-run
   ];
   # raylib's build needs the headers, which live in the -dev outputs
   extraOutputsToInstall = [ "dev" ];
-  # with arguments, run them (e.g. ./run.sh); without, an interactive shell.
-  # The Go env is set here, not in `profile`, so it also applies without a login shell.
+  # with arguments, run them (e.g. ./run.sh); without, an interactive shell
   runScript = pkgs.writeShellScript "paket-blitz-fhs-run" ''
-    export CGO_ENABLED=1
-    export GOFLAGS=-tags=x11
     if [ $# -eq 0 ]; then exec bash; fi
     exec "$@"
   '';

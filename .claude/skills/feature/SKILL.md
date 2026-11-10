@@ -30,7 +30,7 @@ Then stop and ask: "Passt der Plan?" Wait for an OK. Let them change the plan.
 Make the smallest change that does the plan. Then:
 
 ```bash
-go vet -tags x11 . && go build -tags x11 -o paket-blitz .
+go vet . && go build -o bin/paket-blitz .
 ```
 
 If it fails, read the error, explain it in one sentence ("Ich habe vergessen, …"), fix, repeat.
@@ -51,7 +51,7 @@ including what looks wrong.
 
 For each thing that's wrong: say what's wrong and why, fix it, take the screenshots again. If the
 bug can come back unnoticed, add a small Go test for it (`*_test.go`, comment names the bug) and
-run `go test -tags x11 .`. No tests for things that already worked.
+run `go test .`. No tests for things that already worked.
 
 ## 6. Show
 

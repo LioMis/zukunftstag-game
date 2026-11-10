@@ -6,8 +6,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 script=${1:?usage: scripts/shoot.sh <script.txt> [flags]}
 shift
-go build -tags x11 -o paket-blitz .
-run=(./paket-blitz -script "$script" -seed 1 -scores shots/scores.json "$@")
+go build -o bin/paket-blitz .
+run=(./bin/paket-blitz -script "$script" -seed 1 -scores shots/scores.json "$@")
 mkdir -p shots
 rm -f shots/scores.json
 if [[ -n "${DISPLAY:-}" || -n "${WAYLAND_DISPLAY:-}" ]]; then
