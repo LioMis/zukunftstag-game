@@ -6,15 +6,21 @@ them (green), collect coins. Each delivery adds time. Highest Franken wins.
 ## Run (NixOS)
 
 ```bash
-nix run
+nix-shell --run 'go run .'
 ```
 
-Or work on it:
+Or open the shell and work in it:
 
 ```bash
-nix develop
+nix-shell
+```
+
+```bash
 go run .
 ```
+
+`shell.nix` enters a bubblewrap FHS environment (`fhs.nix`) and needs no flakes. With flakes
+enabled, `nix develop` and `nix run` do the same.
 
 Controls: arrow keys or WASD, Enter/Space to confirm, Esc to quit. Gamepads work too.
 Flags: `-fullscreen`, `-w`/`-h`, `-scores <file>`.
