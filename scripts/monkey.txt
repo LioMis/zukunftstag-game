@@ -1,9 +1,10 @@
-# The truck stands still; the monkey runs up and steals a coin.
+# The truck turns on the spot to face west, where the monkey arrives from, and waits until it
+# steals a coin.
 5 enter
-30 shot 30-start
-240 shot 31-coming
-480 shot 32-closer
-720 shot 33-near
-960 shot 34-later
-1200 shot 35-later
+6 hold right
+71 release right
+1110 shot 31-coming
+1130 shot 32-closer
+1150 shot 33-near
+1200 shot 34-stolen
 1201 quit
