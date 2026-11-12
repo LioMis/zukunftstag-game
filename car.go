@@ -74,8 +74,8 @@ func (c *Car) Update(in Input, city *City, dt float32) float32 {
 
 	// Step 2: steering.
 	// steer becomes +1 for left, -1 for right, and 0 for none or both keys.
-	// grip makes steering depend on speed, like a real car: standing still you can't turn,
-	// and from speed 5 up you turn fully. sign flips the steering when reversing, because a
+	// grip makes steering depend on speed: standing still the truck turns on the spot at 60%,
+	// and from speed 5 up it turns fully. sign flips the steering when reversing, because a
 	// car going backwards turns the other way. Then the heading changes by all of that together.
 	steer := float32(0)
 	if in.Left {
@@ -84,7 +84,7 @@ func (c *Car) Update(in Input, city *City, dt float32) float32 {
 	if in.Right {
 		steer--
 	}
-	grip := clamp(float32(math.Abs(float64(c.Speed)))/5, 0, 1)
+	grip := 0.6 + 0.4*clamp(float32(math.Abs(float64(c.Speed)))/5, 0, 1)
 	sign := float32(1)
 	if c.Speed < 0 {
 		sign = -1
