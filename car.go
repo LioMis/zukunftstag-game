@@ -51,7 +51,8 @@ func (c *Car) Update(in Input, city *City, dt float32) float32 {
 	if in.Right {
 		steer--
 	}
-	grip := clamp(float32(math.Abs(float64(c.Speed)))/5, 0, 1)
+	// Standing still still turns (on the spot), just a bit slower than at speed.
+	grip := 0.6 + 0.4*clamp(float32(math.Abs(float64(c.Speed)))/5, 0, 1)
 	sign := float32(1)
 	if c.Speed < 0 {
 		sign = -1
