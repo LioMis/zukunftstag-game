@@ -25,55 +25,56 @@ func (c *Car) Forward() rl.Vector3 {
 }
 
 // Update moves the car. Returns the impact speed if it hit something this frame.
+// dt is the time since the last frame in seconds (1/60 at 60 fps), so "x * dt" means "x per second".
 func (c *Car) Update(in Input, city *City, dt float32) float32 {
-	switch {
-	case in.Up:
-		if c.Speed < 0 {
-			c.Speed += 30 * dt
-		} else {
-			c.Speed += 16 * dt
+	switch { // pick the first case that is true
+	case in.Up: // gas pedal pressed
+		if c.Speed < 0 { // still rolling backwards?
+			c.Speed += 30 * dt // then brake hard: 30 speed units per second
+		} else { // standing or already going forward
+			c.Speed += 16 * dt // speed up more gently: 16 per second
 		}
-	case in.Down:
-		if c.Speed > 0 {
-			c.Speed -= 30 * dt
-		} else {
-			c.Speed -= 10 * dt
+	case in.Down: // brake / reverse pressed
+		if c.Speed > 0 { // still rolling forwards?
+			c.Speed -= 30 * dt // then brake hard
+		} else { // standing or already going backwards
+			c.Speed -= 10 * dt // reverse slowly: 10 per second
 		}
-	default:
-		c.Speed -= c.Speed * 1.5 * dt
+	default: // no pedal pressed
+		c.Speed -= c.Speed * 1.5 * dt // roll out: lose 1.5x the current speed per second, so fast slows quickly and slow creeps
 	}
-	c.Speed = clamp(c.Speed, -carMaxRev, carMaxSpeed)
+	c.Speed = clamp(c.Speed, -carMaxRev, carMaxSpeed) // never faster than 17 forwards or 6 backwards
 
-	steer := float32(0)
-	if in.Left {
-		steer++
+	steer := float32(0) // 0 = wheel straight
+	if in.Left {        // left pressed
+		steer++ // +1 = turn left
 	}
-	if in.Right {
-		steer--
+	if in.Right { // right pressed
+		steer-- // -1 = turn right; both pressed cancels out to 0
 	}
-	grip := clamp(float32(math.Abs(float64(c.Speed)))/5, 0, 1)
-	sign := float32(1)
-	if c.Speed < 0 {
-		sign = -1
+	grip := clamp(float32(math.Abs(float64(c.Speed)))/5, 0, 1) // standing car can't turn; full turning from speed 5 up
+	sign := float32(1)                                         // driving forwards: steering works normally
+	if c.Speed < 0 {                                           // driving backwards?
+		sign = -1 // then flip steering, like a real car reversing
 	}
-	c.Heading += steer * 2.4 * grip * sign * dt
+	c.Heading += steer * 2.4 * grip * sign * dt // turn the truck: at most 2.4 radians (about 140°) per second
 
-	c.Pos = rl.Vector3Add(c.Pos, rl.Vector3Scale(c.Forward(), c.Speed*dt))
-	pos, n := city.Collide(c.Pos, carRadius)
-	c.Pos = pos
-	c.Bump += dt
-	if n.X != 0 || n.Z != 0 {
+	c.Pos = rl.Vector3Add(c.Pos, rl.Vector3Scale(c.Forward(), c.Speed*dt)) // move along the way the truck faces, by speed × time
+	pos, n := city.Collide(c.Pos, carRadius)                               // ask the town: are we inside a building or tree? get a fixed position and the wall direction n
+	c.Pos = pos                                                            // put the truck back out of the wall
+	c.Bump += dt                                                           // count time since the last crash sound
+	if n.X != 0 || n.Z != 0 {                                              // n is not zero: we touched a wall
 		// Lose the part of the velocity going into the wall.
-		into := -rl.Vector3DotProduct(c.Forward(), n) * c.Speed
-		if into > 0 {
-			c.Speed *= 0.6
-			if into > 6 && c.Bump > 0.4 {
-				c.Bump = 0
-				return into
+		into := -rl.Vector3DotProduct(c.Forward(), n) * c.Speed // how fast we drove straight into the wall (0 if we only scraped along it)
+		if into > 0 {                                           // really moving towards the wall, not away from it
+			c.Speed *= 0.6                // crash: keep only 60% of the speed
+			if into > 6 && c.Bump > 0.4 { // hard enough, and the last crash sound was over 0.4 s ago?
+				c.Bump = 0  // restart the crash-sound timer
+				return into // tell the game how hard we hit, so it plays the crash sound
 			}
 		}
 	}
-	return 0
+	return 0 // no loud crash this frame
 }
 
 func (c *Car) Draw(a *Assets) {
