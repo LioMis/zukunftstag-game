@@ -1,0 +1,9 @@
+# The truck stands still; the monkey runs up and steals a coin.
+5 enter
+30 shot 30-start
+240 shot 31-coming
+480 shot 32-closer
+720 shot 33-near
+960 shot 34-later
+1200 shot 35-later
+1201 quit

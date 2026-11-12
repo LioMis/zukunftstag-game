@@ -49,6 +49,7 @@ type Game struct {
 	Dropoff   int
 	Coins     []rl.Vector3
 	Popups    []Popup
+	Monkey    Monkey
 
 	Scores     []Score
 	ScoresPath string
@@ -79,6 +80,7 @@ func (g *Game) reset() {
 	for len(g.Coins) < numCoins {
 		g.Coins = append(g.Coins, g.randomRoadSpot())
 	}
+	g.Monkey = Monkey{Pos: g.farRoadSpot()}
 	g.Cam = rl.Camera3D{Position: rl.NewVector3(start.X, 8, start.Z-10), Target: start,
 		Up: rl.NewVector3(0, 1, 0), Fovy: 55, Projection: rl.CameraPerspective}
 }
@@ -228,6 +230,8 @@ func (g *Game) updatePlay(in Input, dt float32) {
 			g.Coins[i] = g.randomRoadSpot()
 		}
 	}
+
+	g.updateMonkey(dt)
 
 	// Chase camera.
 	f := g.Car.Forward()

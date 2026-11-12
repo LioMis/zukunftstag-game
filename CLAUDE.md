@@ -26,11 +26,12 @@ suggestions or offer options; the adult steers.
 | `draw.go` | all rendering: 3D scene, markers, HUD, menus |
 | `city.go` | town grid generation, road tile rotation, collision |
 | `car.go` | truck driving physics |
+| `monkey.go` | the monkey that chases the truck and steals coins |
 | `input.go` | keyboard/gamepad input and the replay script format |
 | `assets.go` | model, font, sound loading; the lit shader |
 | `scores.go` | highscore table (`scores.json`) |
 
-Ready-made but unused: `assets/custom/monkey.glb`, a cartoon monkey (about 1.75 m tall, faces +Z),
+The monkey (`monkey.go`) uses `assets/custom/monkey.glb`, a cartoon monkey (about 1.75 m tall, faces +Z),
 loaded as `"monkey"`: `g.A.Draw("monkey", pos, rotDeg, 1)`. To change its look, edit
 `scripts/make-monkey.py` and rerun it.
 
